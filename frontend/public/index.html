@@ -109,7 +109,8 @@ header.scrolled .nav{height:60px;background:rgba(8,8,8,.82);box-shadow:0 16px 46
 .btn-red:hover:before{transform:translateX(0)}
 .btn-red:hover{transform:translateY(-2px)}
 .btn-red:active{transform:translateY(0)}
-.burger{display:none;width:44px;height:44px;border:1px solid var(--line);border-radius:2px;align-items:center;justify-content:center}
+.burger{display:none;width:46px;height:46px;border:1px solid rgba(255,255,255,.12);border-radius:999px;background:rgba(255,255,255,.04);align-items:center;justify-content:center;transition:border-color .2s,background .2s}
+.burger:hover{border-color:var(--red);background:rgba(217,4,41,.12)}
 .burger svg{width:20px;height:20px}
 
 /* ---------- HERO ---------- */
@@ -350,6 +351,8 @@ html.no-motion .radar-sweep,html.no-motion .sweep2,html.no-motion .sweep-line,ht
   .reviews-grid{grid-template-columns:1fr}
   .nav-links{display:none}
   .tel-btn .lbl{display:none}
+  .nav-cta .btn-red{display:none}
+  .nav .tel-btn{width:46px;height:46px;padding:0;justify-content:center}
   .burger{display:flex}
   .zone-grid{gap:40px}
   .chapter{grid-template-columns:90px 1fr;gap:20px}

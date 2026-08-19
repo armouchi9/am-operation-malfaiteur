@@ -1,0 +1,85 @@
+{
+  "typography": {
+    "fonts": [
+      {
+        "role": "Primary/Hero Impact",
+        "family": "'Anton', sans-serif",
+        "weight": "400",
+        "usage": "Massive headlines, aggressive street-style branding, 'WANTED' posters."
+      },
+      {
+        "role": "Dossier/Typewriter",
+        "family": "'Special Elite', cursive",
+        "weight": "400",
+        "usage": "File numbers, timestamps, 'CONFIDENTIAL' stamps, manifest numbered chapters."
+      },
+      {
+        "role": "Body/HUD Tactical",
+        "family": "'IBM Plex Mono', monospace",
+        "weight": "400, 600",
+        "usage": "Data readout, service descriptions, technical details, form inputs."
+      }
+    ],
+    "rules": {
+      "headings": "Uppercase exclusively for Anton. Extremely tight letter-spacing (tracking).",
+      "body": "Left-aligned, crisp, high legibility. Monospace adds to the 'tactical radar' and 'typewriter file' aesthetic."
+    }
+  },
+  "colors": {
+    "palette": {
+      "background_base": "#050505",
+      "background_dossier": "#0A0A0A",
+      "text_primary": "#F4F0EB",
+      "text_muted": "#8A8A8A",
+      "brand_blood_red": "#D90429",
+      "brand_dark_red": "#8D0801",
+      "tactical_accent": "#FF1A1A"
+    },
+    "rules": {
+      "theme": "Dark Mode Only. The aesthetic is a dark, moody crime scene/night ops mission.",
+      "accents": "Use blood red for interactive elements, hover states, and 'WANTED' / 'CONFIDENTIAL' stamps.",
+      "contrast": "Do not use pure #000000; #050505 provides depth without swallowing shadows."
+    }
+  },
+  "visual_enhancers": {
+    "cursor": "Custom crosshair / sniper reticle following the mouse (position fixed, pointer-events: none). Hide default cursor on body.",
+    "scanlines": "Overlay a fixed `repeating-linear-gradient` over the hero or radar sections (opacity 0.03) to simulate tactical HUDs.",
+    "stamps": "CSS-styled elements with `border: 4px solid #D90429`, rotated slightly (e.g., `transform: rotate(-5deg)`), with uppercase Special Elite text to mimic ink stamps.",
+    "security_tape": "Diagonal CSS repeating linear gradients for section dividers. Animated via CSS translation to look like a moving police barricade tape."
+  },
+  "component_name": "landing_page.html",
+  "grids": {
+    "services_bento": "Asymmetrical CSS Grid. Combine tall vertical cards (dossiers) with wide tactical readouts.",
+    "dossier_layout": "Overlapping elements. Absolute positioning inside relative containers to pin paper clips or stamps overlapping the borders of the 'WANTED' files."
+  },
+  "layouts": {
+    "hero": "Full viewport height. Massive kinesthetic typography. Line-by-line masked text reveal. A subtle HUD circle/radar in the background.",
+    "services": "Grid of 'WANTED' cards. Each card has a mugshot area (SVG icon), dossier number, and 'Eliminate' button.",
+    "engagements": "Numbered manifesto list. Large monospace numbers (01, 02) with typewriter-style descriptions.",
+    "radar_map": "Concentric circles intersecting with a stylized SVG map of Île-de-France. A sweeping CSS conic-gradient to simulate radar sweeps.",
+    "pro_space": "Designed like a secure 'CLASSIFIED' top-secret folder.",
+    "anti_tariff": "Red alert box. 'NO RANSOM WITHOUT PROOF'. Emphasizing free quotes after on-site diagnostic."
+  },
+  "motion": {
+    "smooth_scroll": "Lenis via CDN initialized on the window.",
+    "hero_reveal": "GSAP masked line-by-line reveal. Use `clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%)` or `yPercent: 100` wrapped in `overflow: hidden` containers.",
+    "parallax": "GSAP ScrollTrigger to move background radar or stamps at different speeds relative to the scroll.",
+    "marquee": "Infinite horizontal CSS scroll for the 'SCÈNE DE CRIME - NE PAS FRANCHIR' tapes.",
+    "micro_interactions": "Buttons get a 'glitch' effect or scanline flash on hover."
+  },
+  "accessibility": {
+    "motion": "Respect `prefers-reduced-motion: reduce` by disabling GSAP animations and custom cursors if queried.",
+    "contrast": "Ensure the blood red (#D90429) against black (#050505) meets WCAG AA for large text. Use off-white for body text.",
+    "attributes": "Add `data-testid` to form inputs, submit buttons, and service cards."
+  },
+  "media": {
+    "instructions": "100% INLINE SVGs. ABSOLUTELY NO EXTERNAL PHOTOS. Do not use img tags with external sources. You must generate raw SVG code for UI icons (crosshairs, rats, wasps, folders, stamps).",
+    "svg_styling": "SVGs should use `stroke='currentColor'` or exact hex codes to perfectly match the red/black tactical theme."
+  },
+  "3d_libraries": {
+    "instructions": "No WebGL/Three.js required. Create the '3D/Parallax' depth using GSAP ScrollTrigger and CSS transforms on layered DOM elements (e.g., overlapping stamps, moving radar rings)."
+  },
+  "image_urls": {},
+  "instructions_to_main_agent": "CRITICAL: The user explicitly requested a SINGLE HTML FILE (index.html). DO NOT use React, Tailwind CLI, or Shadcn. Use vanilla HTML, vanilla CSS (embedded in <style>), and vanilla JS (embedded in <script>). Import GSAP and Lenis via CDN script tags. Implement the creative 'Scene of Crime / Wanted Dossier' theme using pure CSS styling. Generate inline SVGs for all graphics (rat, wasp, radar, map). Do NOT build a standard generic corporate layout. Inject tension, asymmetry, and raw tactical energy into the CSS.",
+  "UNIVERSAL GUIDELINES FOR MAIN AGENT": "1. Reject 'AI slop' aesthetics (centered generic boxes, light gray borders, happy emojis). 2. Create extreme tension via high contrast (Deep black vs Blood red). 3. Every interaction needs micro-animations (e.g., typewriter effect on hover, glitch). 4. Use 2x-3x more spacing (padding/margin) to make the text feel monumental. 5. Include `data-testid` on all actionable elements. 6. All images must be INLINE SVG drawn by you, no external images. 7. Do not use transparent overlays that make text unreadable."
+}

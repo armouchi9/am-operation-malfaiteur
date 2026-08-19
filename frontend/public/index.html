@@ -83,10 +83,10 @@ body.cursor-on a,body.cursor-on button,body.cursor-on input,body.cursor-on selec
 h1,h2,h3{font-family:var(--anton);text-transform:uppercase;letter-spacing:-.01em;line-height:.92;font-weight:400}
 
 /* ---------- HEADER ---------- */
-header{position:fixed;top:0;left:0;right:0;z-index:9000;transition:background .4s,border-color .4s,padding .4s;border-bottom:1px solid transparent}
-header.scrolled{background:rgba(5,5,5,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-.nav{display:flex;align-items:center;justify-content:space-between;height:78px;transition:height .4s}
-header.scrolled .nav{height:64px}
+header{position:fixed;top:14px;left:0;right:0;z-index:9000;padding:0 18px;transition:top .35s}
+header.scrolled{top:8px}
+.nav{max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:18px;height:68px;padding:0 10px 0 18px;border-radius:999px;background:rgba(12,12,12,.55);backdrop-filter:blur(16px) saturate(1.3);-webkit-backdrop-filter:blur(16px) saturate(1.3);border:1px solid rgba(255,255,255,.08);box-shadow:0 14px 40px -14px rgba(0,0,0,.75);transition:height .35s,background .35s,box-shadow .35s}
+header.scrolled .nav{height:60px;background:rgba(8,8,8,.82);box-shadow:0 16px 46px -14px rgba(0,0,0,.9),0 0 0 1px rgba(217,4,41,.12)}
 .brand{display:flex;align-items:center;gap:12px}
 .brand .mark{width:44px;height:44px;flex:none}
 .brand .txt{line-height:1}
@@ -136,6 +136,11 @@ header.scrolled .nav{height:64px}
 .hero-sub{max-width:560px;margin-top:22px;font-size:15.5px;color:#cfcac2;line-height:1.7}
 .hero-sub b{color:var(--text)}
 .hero-cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:28px}
+.hero-sub,.hero-cta,.hero-meta{animation:heroFade .75s ease both}
+.hero-cta{animation-delay:.12s}
+.hero-meta{animation-delay:.24s}
+@keyframes heroFade{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+html.no-motion .hero-sub,html.no-motion .hero-cta,html.no-motion .hero-meta{animation:none}
 .btn-ghost{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-weight:600;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;padding:13px 22px;border:1px solid var(--line);border-radius:2px;transition:border-color .25s,background .25s,transform .2s}
 .btn-ghost:hover{border-color:var(--text);background:rgba(255,255,255,.04);transform:translateY(-2px)}
 .btn-ghost.wa:hover{border-color:#25D366;color:#25D366}
@@ -307,26 +312,16 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;background:var(--bg)
 html.no-motion .reveal{opacity:1!important;transform:none!important}
 
 /* ---------- LOGO IMAGE ---------- */
-.logo-img{height:66px;width:auto;mix-blend-mode:screen;transition:height .4s ease, filter .3s;filter:drop-shadow(0 3px 10px rgba(217,4,41,.35))}
-.brand:hover .logo-img{filter:drop-shadow(0 3px 16px rgba(217,4,41,.6))}
-header.scrolled .logo-img{height:52px}
-
-/* ---------- GIROPHARE (rotating emergency beacon) ---------- */
-.girophare{position:absolute;top:12%;right:4%;width:min(30vw,320px);height:min(30vw,320px);z-index:1;pointer-events:none;opacity:.82}
-.girophare .sweep-beam{position:absolute;inset:0;border-radius:50%;
-  background:conic-gradient(from 0deg,rgba(255,26,26,.42),transparent 20%,transparent 50%,rgba(255,26,26,.42) 50%,transparent 70%,transparent 100%);
-  filter:blur(4px);mask:radial-gradient(circle,transparent 8%,#000 12%);animation:spin 2.6s linear infinite}
-.girophare .lamp{position:absolute;top:50%;left:50%;width:34px;height:34px;transform:translate(-50%,-50%);border-radius:50%;
-  background:radial-gradient(circle at 40% 35%,#fff 0%,#ff5a5a 35%,#ff1a1a 60%,#8d0801 100%);
-  box-shadow:0 0 40px 10px rgba(255,26,26,.75);animation:flash 2.6s ease-in-out infinite}
-@keyframes flash{0%,100%{opacity:.45;box-shadow:0 0 22px 4px rgba(255,26,26,.4)}50%{opacity:1;box-shadow:0 0 55px 14px rgba(255,26,26,.9)}}
+.logo-img{height:48px;width:auto;transition:height .35s ease, filter .3s;filter:drop-shadow(0 3px 12px rgba(217,4,41,.4))}
+.brand:hover .logo-img{filter:drop-shadow(0 3px 18px rgba(217,4,41,.7))}
+header.scrolled .logo-img{height:44px}
 
 /* ---------- RUBALISE decorations (crime-scene tape strips) ---------- */
 .tape-deco{position:absolute;background:var(--tape);color:#000;font-family:var(--anton);font-size:14px;letter-spacing:2px;text-transform:uppercase;
   padding:9px 40px;white-space:nowrap;border-top:2px solid #000;border-bottom:2px solid #000;box-shadow:0 8px 26px rgba(0,0,0,.55);pointer-events:none;overflow:hidden}
 .tape-deco:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 120px,rgba(0,0,0,.14) 120px 122px)}
 .tape-deco.red{background:var(--red);color:#fff}
-.hero-tape{bottom:26px;left:-6%;width:112%;transform:rotate(-3.2deg);z-index:1;opacity:.95;text-align:center}
+.hero-tape{display:none}
 .pro-tape{top:26px;right:-46px;transform:rotate(38deg);z-index:6;font-size:12px;padding:7px 60px}
 .alert-tape{top:50%;left:-6%;width:112%;transform:translateY(-50%) rotate(-4deg);z-index:2;opacity:.14;text-align:center;box-shadow:none}
 
@@ -339,7 +334,7 @@ header.scrolled .logo-img{height:52px}
 .map-stage svg.idf .ping-ring{fill:none;stroke:var(--red-hot);stroke-width:1.6;transform-box:fill-box;transform-origin:center;animation:pingring 2.4s ease-out infinite}
 @keyframes pingring{0%{transform:scale(.7);opacity:.85}100%{transform:scale(2.6);opacity:0}}
 
-html.no-motion .radar-sweep,html.no-motion .sweep2,html.no-motion .girophare .sweep-beam,html.no-motion .girophare .lamp,html.no-motion .fx-grain,html.no-motion .pulse:before,html.no-motion .ping-ring,html.no-motion .hero h1 .accent:after,html.no-motion .scroll-hint i{animation:none!important}
+html.no-motion .radar-sweep,html.no-motion .sweep2,html.no-motion .fx-grain,html.no-motion .pulse:before,html.no-motion .ping-ring,html.no-motion .hero h1 .accent:after,html.no-motion .scroll-hint i{animation:none!important}
 
 /* ---------- RESPONSIVE ---------- */
 @media(max-width:960px){
@@ -354,9 +349,8 @@ html.no-motion .radar-sweep,html.no-motion .sweep2,html.no-motion .girophare .sw
 @media(max-width:640px){
   .wrap{padding:0 18px}
   section.block{padding:80px 0}
-  .logo-img{height:44px}
-  .girophare{opacity:.45;width:60vw;height:60vw;top:auto;bottom:10%;right:-10%}
-  .hero-tape{font-size:11px;padding:6px 20px}
+  .logo-img{height:42px}
+  .hero-tape{display:none}
   .pro-tape{display:none}
   .reviews-grid{grid-template-columns:1fr}
   .row-2{grid-template-columns:1fr}
@@ -388,9 +382,9 @@ html.no-motion .radar-sweep,html.no-motion .sweep2,html.no-motion .girophare .sw
 
 <!-- HEADER -->
 <header id="header">
-  <div class="wrap nav">
+  <div class="nav">
     <a href="#top" class="brand" data-testid="brand-logo" aria-label="AM Opération Malfaiteur, accueil">
-      <img class="logo-img" src="https://customer-assets-jai6qajn.emergentagent.net/job_rat-chase-idf/artifacts/l2lzzr8l_IMG_6070.webp" alt="AM Opération Malfaiteur" />
+      <img class="logo-img" src="https://customer-assets-jai6qajn.emergentagent.net/job_rat-chase-idf/artifacts/5w81jz59_Image%20ChatGPT%2019%20aou%CC%82t%202026.png" alt="AM Opération Malfaiteur" />
     </a>
     <nav class="nav-links" aria-label="Navigation principale">
       <a href="#services">Cibles</a>
@@ -431,8 +425,6 @@ html.no-motion .radar-sweep,html.no-motion .sweep2,html.no-motion .girophare .sw
     <div class="radar-rings"></div><div class="radar-core"></div><div class="radar-sweep"></div>
   </div>
   <div class="hero-grid-lines" aria-hidden="true"></div>
-  <div class="girophare" aria-hidden="true"><span class="sweep-beam"></span><span class="lamp"></span></div>
-  <div class="tape-deco hero-tape" aria-hidden="true">Ne pas franchir · Scène de crime · Zone sécurisée · Opération en cours · Ne pas franchir · Scène de crime · Zone sécurisée ·</div>
   <div class="wrap hero-inner">
     <div class="hero-status" data-testid="hero-status">
       <span class="pulse"></span> UNITÉ DISPONIBLE · INTERVENTION EN ÎLE-DE-FRANCE · 7J/7
@@ -742,7 +734,7 @@ html.no-motion .radar-sweep,html.no-motion .sweep2,html.no-motion .girophare .sw
     <div class="foot-grid">
       <div class="foot-brand">
         <div class="brand">
-          <img class="logo-img" style="height:110px;mix-blend-mode:screen" src="https://customer-assets-jai6qajn.emergentagent.net/job_rat-chase-idf/artifacts/l2lzzr8l_IMG_6070.webp" alt="AM Opération Malfaiteur" />
+          <img class="logo-img" style="height:120px" src="https://customer-assets-jai6qajn.emergentagent.net/job_rat-chase-idf/artifacts/5w81jz59_Image%20ChatGPT%2019%20aou%CC%82t%202026.png" alt="AM Opération Malfaiteur" />
         </div>
         <p>« On s'associe pour éliminer les vrais malfaiteurs. »<br>Dératisation, désinsectisation, destruction de nids & désinfection en Île-de-France.</p>
       </div>
@@ -840,16 +832,8 @@ html.no-motion .radar-sweep,html.no-motion .sweep2,html.no-motion .girophare .sw
   /* ---------- Hero entrance ---------- */
   if(!reduceMotion && window.gsap){
     var heroLines = document.querySelectorAll("#hero-title .ln > span");
-    var tl = gsap.timeline({delay:.2,defaults:{ease:"power4.out"}});
-    tl.from(heroLines,{yPercent:112,duration:1.0,stagger:.12,clearProps:"transform"})
-      .from(["#hero-sub","#hero-cta","#hero-meta"],{opacity:0,y:26,duration:.7,stagger:.13,clearProps:"all"},"-=.5");
+    gsap.timeline({delay:.15}).from(heroLines,{yPercent:112,duration:1.0,stagger:.12,ease:"power4.out",clearProps:"transform"});
   }
-  // safety net: guarantee hero content is visible even if the timeline is interrupted
-  setTimeout(function(){
-    ["#hero-sub","#hero-cta","#hero-meta"].forEach(function(s){
-      var e=document.querySelector(s); if(e){ e.style.opacity="1"; e.style.transform="none"; }
-    });
-  }, 2400);
 
   /* ---------- Scroll reveals (varied) ---------- */
   if(!reduceMotion && window.gsap && window.ScrollTrigger){

@@ -89,7 +89,7 @@
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;overflow-x:hidden}
 html.lenis,html.lenis body{height:auto}
 .lenis.lenis-smooth{scroll-behavior:auto!important}
 .lenis.lenis-smooth [data-lenis-prevent]{overscroll-behavior:contain}
@@ -421,21 +421,73 @@ html.no-motion .radar-sweep,html.no-motion .sweep2,html.no-motion .sweep-line,ht
 }
 @media(max-width:640px){
   .wrap{padding:0 18px}
-  section.block{padding:80px 0}
+  section.block{padding:70px 0}
   .logo-img{height:36px}
   .hero-tape{display:none}
   .pro-tape{display:none}
   .reviews-grid{grid-template-columns:1fr}
   .row-2{grid-template-columns:1fr}
-  .dept-list{grid-template-columns:1fr}
-  .pro-body{padding:26px}
-  .form-card{padding:24px}
+  .dept-list{grid-template-columns:repeat(2,1fr)}
+  .pro-body{padding:24px}
+  .form-card{padding:22px}
   .nav-cta .btn-red{display:none}
-  .hero-meta{gap:20px 30px}
+
+  /* hero */
+  .hero{padding:94px 0 44px;min-height:auto}
+  .hero-status{font-size:9.5px;letter-spacing:1.5px;padding:8px 11px;gap:9px;margin-bottom:18px}
+  .hero h1{font-size:clamp(2.05rem,9.6vw,2.9rem)}
+  .hero-tagline{font-size:13.5px;margin-top:12px}
+  .hero-sub{font-size:13.5px;margin-top:12px;line-height:1.6}
+  .hero-cta{flex-direction:column;align-items:stretch;gap:10px;margin-top:20px}
+  .hero-cta .btn-red,.hero-cta .btn-ghost{justify-content:center;width:100%;padding:15px 18px}
+  .hero-meta{gap:16px 20px;margin-top:22px;padding-top:18px}
+  .hero-meta .m{flex:1 0 40%}
+  .hero-meta .m b{font-size:23px}
+
+  /* section heads */
+  .sec-head{margin-bottom:32px}
+  .sec-head h2{font-size:clamp(2rem,9vw,2.8rem)}
+  .sec-head p{font-size:14px;margin-top:14px}
+  .eyebrow{font-size:11px;letter-spacing:2.5px}
+
+  /* services */
+  .dossier{padding:22px}
+  .dossier .mug{width:68px;height:68px;margin-bottom:16px}
+  .dossier .mug svg{width:44px;height:44px}
+  .dossier h3{font-size:22px}
+  .dossier .stamp{font-size:9px;top:16px;right:14px;padding:4px 7px}
+
+  /* manifesto */
+  .chapter{grid-template-columns:52px 1fr;gap:14px;padding:22px 0}
+  .chapter h3{font-size:21px}
+  .chapter p{font-size:13.5px}
+
+  /* tapes */
+  .tape-track span{font-size:15px;padding:0 16px;gap:16px}
+  .tape.skew{margin:40px 0}
+
+  /* zone */
+  .zone-grid{gap:30px}
+  .dept{padding:10px 12px}
+  .dept b{font-size:16px}
+
+  /* pro + alert + contact */
+  .pro-grid{gap:26px}
+  .alert{padding:34px 20px}
+  .contact-grid{gap:34px}
+
+  /* footer */
+  .foot-grid{flex-direction:column;gap:28px}
+  .foot-cols{gap:34px}
+}
+@media(max-width:380px){
+  .hero h1{font-size:2rem}
+  .hero-status{font-size:9px;letter-spacing:1px}
+  .hero-meta .m b{font-size:21px}
 }
 /* mobile nav drawer */
-.drawer{position:fixed;inset:0;z-index:9500;background:rgba(5,5,5,.97);backdrop-filter:blur(10px);display:flex;flex-direction:column;justify-content:center;gap:8px;padding:40px;transform:translateX(100%);transition:transform .4s cubic-bezier(.7,0,.3,1)}
-.drawer.open{transform:none}
+.drawer{position:fixed;inset:0;z-index:9500;background:rgba(5,5,5,.97);backdrop-filter:blur(10px);display:flex;flex-direction:column;justify-content:center;gap:8px;padding:40px;transform:translateX(100%);visibility:hidden;transition:transform .4s cubic-bezier(.7,0,.3,1),visibility 0s linear .4s}
+.drawer.open{transform:none;visibility:visible;transition:transform .4s cubic-bezier(.7,0,.3,1)}
 .drawer a{font-family:var(--anton);font-size:34px;text-transform:uppercase;color:var(--text);padding:10px 0;border-bottom:1px solid var(--line)}
 .drawer a:hover{color:var(--red)}
 .drawer .close{position:absolute;top:24px;right:24px;width:44px;height:44px;border:1px solid var(--line);border-radius:2px;font-size:22px;display:flex;align-items:center;justify-content:center}
@@ -913,7 +965,7 @@ html.no-motion .radar-sweep,html.no-motion .sweep2,html.no-motion .sweep-line,ht
     });
 
     // radar map parallax
-    gsap.to(".map-stage .idf",{yPercent:-8,ease:"none",scrollTrigger:{trigger:"#zone",start:"top bottom",end:"bottom top",scrub:true}});
+    gsap.to(".map-stage .idf-real",{yPercent:-8,ease:"none",scrollTrigger:{trigger:"#zone",start:"top bottom",end:"bottom top",scrub:true}});
     gsap.to(".hero-radar",{yPercent:18,ease:"none",scrollTrigger:{trigger:".hero",start:"top top",end:"bottom top",scrub:true}});
 
     // tape marquee driven by scroll velocity + base drift

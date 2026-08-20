@@ -1,0 +1,25 @@
+{
+  "summary": "Mobile optimization pass tested at 390x844 and desktop regression at 1440x900. Hero CTAs stack full-width on mobile, navbar collapses to phone+burger, drawer opens/closes, zone map dept-list is 2 columns with all 8 codes, services stack in one column, contact form POSTs to /api/contact successfully and shows French .ok success message. Desktop layout intact (nav shows links+phone+DEVIS, hero CTAs in a row). One minor caveat: document.documentElement.scrollWidth exceeds innerWidth by ~9px on mobile and ~30px on desktop due to off-screen .drawer and decorative elements (.fx-grain, .hero-radar, .reticle), but body has overflow-x:hidden and window.scrollX stays at 0, so users cannot actually scroll horizontally.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "documentElement horizontal scrollWidth", "issues": ["scrollWidth=399 on 390 viewport (diff 9px) and 1470 on 1440 desktop (diff 30px). Root cause: closed .drawer positioned at translateX(100%) still contributes to scrollWidth on <html>. Body has overflow-x:hidden so no user-visible scroll, but strict test threshold (<=1px on <html>) fails. Consider adding overflow-x:hidden on html as well, or transform:translate3d + visibility:hidden + width:0 on closed drawer, or wrapping decorative absolute-positioned elements in an overflow-hidden container."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Optional: add `html{overflow-x:hidden}` in addition to body, or contain the .drawer / decorative .fx-grain/.hero-radar so documentElement.scrollWidth <= innerWidth on all viewports. Current implementation already prevents actual horizontal scrolling for the user."
+  ],
+  "critical_code_review_comments": [
+    "Console warning: 'GSAP target .map-stage .idf not found' fires on both mobile and desktop — either the selector is stale or the animation should be guarded with `if(gsap.utils.selector(...))` to avoid noisy warnings.",
+    "Closed drawer at translateX(100%) still inflates <html>.scrollWidth; using visibility:hidden or display state when closed would prevent this."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (frontend-only per request)", "frontend": "95%"},
+  "seed_data_creation": "none",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Mobile CSS pass verified: hero CTAs full-width stacked (each 354px on 390 viewport), header-cta-devis hidden on mobile, menu-open+header-phone visible (46x46), drawer opens/closes via data-testid menu-open/menu-close, dept-list uses 172px 172px grid with 8 items, services stack vertically at 354px, contact POST /api/contact returned success '✓ Demande transmise...' with class 'ok'. Desktop 1440 nav shows header-phone + header-cta-devis + hidden menu-open, hero CTAs all at top=656 (single row). Minor: html scrollWidth diff ~9px mobile / ~30px desktop caused by closed .drawer and decorative elements; user cannot actually scroll horizontally because body has overflow-x:hidden and window.scrollX stays 0."
+}

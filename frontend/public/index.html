@@ -334,7 +334,9 @@ section.block{position:relative;padding:110px 0}
 .qa .ans p{padding:0 4px 26px;color:var(--muted);font-size:14.5px;line-height:1.7}
 
 /* ---------- CONTACT ---------- */
-.contact{background:var(--bg-2);border-top:1px solid var(--line)}
+.contact{background:linear-gradient(158deg,#5a0a13 0%,#2b0608 26%,#120708 52%,#070707 100%);border-top:1px solid rgba(217,4,41,.28);position:relative}
+.contact:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(70% 60% at 18% 8%,rgba(217,4,41,.30),transparent 65%)}
+.contact .wrap{position:relative;z-index:1}
 .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px}
 .form-card{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:36px;position:relative}
 .form-card .barcode{position:absolute;top:20px;right:24px;height:26px;display:flex;gap:2px;align-items:flex-end;opacity:.5}

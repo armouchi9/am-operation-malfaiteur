@@ -1,0 +1,32 @@
+{
+  "summary": "Verified the .pro-tape corner ribbon fix on https://rat-chase-idf.preview.emergentagent.com. Ribbon now renders as a clean, contained corner banner in the top-right of .pro-folder with text 'Confidentiel' (uppercased via CSS to 'CONFIDENTIEL'), clipped by the parent's overflow:hidden + border-radius:6px. No horizontal overflow at desktop (1440x900, diff=0px) or mobile (390x844, diff=0px). Ribbon is display:none on mobile as required. Pro section still shows the CLASSIFIÉ tab, RESTAURANTS heading, 4 list items and pro-cta 'Demander un contrat'. Hero regression OK (hero-lead, hero-call, hero-whatsapp, hero-devis present; no .girophare). Contact form POST /api/contact reached the backend but the upstream email integration (integrations.emergentagent.com) returned 500, so form-message got class 'form-msg err' instead of 'ok' — this is a third-party email service failure, NOT a regression of the tape fix.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "/api/contact", "issue": "Upstream integrations.emergentagent.com email endpoint returning 500 ('Internal server error'). Backend catches it and responds with error, causing UI form-message class 'err'. Not related to current fix; likely transient third-party outage."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [
+      {"flow": "Contact form submit", "issue": "form-message shows class 'form-msg err' due to backend email integration 500 (external service). form did POST successfully.", "affected_selectors": ["[data-testid=form-message]"]}
+    ],
+    "design_issues": []
+  },
+  "test_report_links": ["/app/test_reports/iteration_7.json"],
+  "action_items": [
+    "Investigate emergentagent email integration 500 responses affecting /api/contact — surface a friendlier UI state or retry, but this is an external outage, not a code bug in the site.",
+    "Optional: the stop_h1 text check via querySelectorAll('h1') did not match 'STOP AUX NUISIBLES' as a single string (likely multiline/split spans). data-testid=hero-lead is present, so functionally OK; consider ensuring the exact text is queryable if needed for future tests."
+  ],
+  "critical_code_review_comments": [
+    ".pro-tape fix is well-contained: fixed width 210px, centered text, rotate(45deg), parent overflow:hidden clips the ends into a clean corner banner. Good use of aria-hidden on decorative ribbon.",
+    "Mobile hides ribbon via @media(max-width:640px){.pro-tape{display:none}} — correct and matches requirement."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "n/a (frontend-only run)", "frontend": "100% for the pro-tape fix and regressions; contact form failure is external"},
+  "seed_data_creation": "None",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Pro-tape ribbon fix validated at 1440x900 and 390x844. Metrics captured: desktop scrollWidth=innerWidth=1440; mobile scrollWidth=innerWidth=390; .pro-tape display=none on mobile. Contact form error is caused by upstream integrations.emergentagent.com returning 500, not by site code — verify by re-running when the email service is back up.",
+  "rca of the issue": "N/A — original bug (ribbon overflow outside rounded corner) is fixed. Verified visually and via bounding rect measurements: pro-tape right=1351.5 < folder right=1316 is a matrix-rotated bbox; the actual painted ribbon is clipped by folder's overflow:hidden and no horizontal document overflow is introduced."
+}

@@ -228,8 +228,14 @@ async def create_contact(payload: ContactCreate):
         '</table></td></tr></table>'
     )
 
-    await send_email(to=OWNER_EMAIL, subject=subject, html=html)
-    return {"status": "success", "id": record["id"]}
+    email_sent = False
+    try:
+        await send_email(to=OWNER_EMAIL, subject=subject, html=html)
+        email_sent = True
+    except Exception as e:
+        # Lead is already saved in MongoDB; never block the user on a transient email outage.
+        logger.error(f"Contact saved but email notification failed for {record['id']}: {e}")
+    return {"status": "success", "id": record["id"], "email_sent": email_sent}
 
 
 # Include the router in the main app

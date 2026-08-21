@@ -1031,7 +1031,46 @@ html.no-motion .radar-sweep,html.no-motion .sweep2,html.no-motion .sweep-line,ht
   var msg = document.getElementById("form-msg");
   var submitBtn = document.getElementById("submit-btn");
   var btnLabel = submitBtn.querySelector(".btn-label");
-  var API_BASE = (window.AM_API_BASE || "");  // "" = same origin (preview & deployed)
+  /* ---------- Fiches services -> formulaire devis (pré-remplissage) ---------- */
+  var pestMap = {
+    "service-deratisation": "Rats / Souris",
+    "service-desinsectisation": "Cafards / Blattes",
+    "service-nids": "Guêpes / Frelons",
+    "service-desinfection": "Désinfection"
+  };
+  document.querySelectorAll(".dossier").forEach(function(card){
+    card.style.cursor = "pointer";
+    card.setAttribute("role", "button");
+    card.setAttribute("tabindex", "0");
+    card.setAttribute("aria-label", "Demander un devis pour ce service");
+    var hint = document.createElement("span");
+    hint.className = "elim";
+    hint.setAttribute("aria-hidden", "true");
+    hint.innerHTML = 'Demander un devis <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+    card.appendChild(hint);
+    function goDevis(){
+      var pest = pestMap[card.getAttribute("data-testid")];
+      var sel = document.getElementById("f-pest");
+      if(pest && sel){ for(var i=0;i<sel.options.length;i++){ if(sel.options[i].value===pest){ sel.selectedIndex=i; break; } } }
+      var el = document.getElementById("contact");
+      if(lenis){ lenis.scrollTo(el,{offset:-70}); } else { el.scrollIntoView({behavior: reduceMotion?"auto":"smooth"}); }
+      setTimeout(function(){ var n=document.getElementById("f-name"); if(n){ n.focus(); } }, 650);
+    }
+    card.addEventListener("click", goDevis);
+    card.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goDevis(); } });
+  });
+
+  /* =====================================================================
+     CONFIG FORMULAIRE — 100% indépendant, hébergeable n'importe où
+     ---------------------------------------------------------------------
+     Option A (recommandée) WEB3FORMS : crée une clé gratuite sur
+       https://web3forms.com (ton email reste caché). Colle la clé ci-dessous.
+     Option B (par défaut) FORMSUBMIT : aucun compte ni clé. Les demandes
+       partent vers l'email ci-dessous (1er envoi = 1 email d'activation à
+       valider). Pour masquer l'email, remplace-le par ton alias FormSubmit.
+     ===================================================================== */
+  var WEB3FORMS_KEY = "";                                  // <-- colle ta clé Web3Forms ici (optionnel)
+  var FORMSUBMIT_EMAIL = "operationmalfaiteur@gmail.com";  // <-- ton email de réception
 
   form.addEventListener("submit", async function(e){
     e.preventDefault();
@@ -1042,19 +1081,35 @@ html.no-motion .radar-sweep,html.no-motion .sweep2,html.no-motion .sweep-line,ht
       msg.className = "form-msg err"; msg.textContent = "Merci d'indiquer au minimum votre nom et votre téléphone.";
       return;
     }
-    var payload = {
-      name: name, phone: phone,
-      city: document.getElementById("f-city").value.trim(),
-      pest_type: document.getElementById("f-pest").value,
-      urgency: urgencyInput.value === "true",
-      message: document.getElementById("f-message").value.trim()
+    var urgent = urgencyInput.value === "true";
+    var subject = (urgent ? "[URGENCE] " : "") + "Nouvelle demande de devis — " + name;
+    var fields = {
+      "Nom": name,
+      "Téléphone": phone,
+      "Ville": document.getElementById("f-city").value.trim() || "—",
+      "Type de nuisible": document.getElementById("f-pest").value || "—",
+      "Urgence": urgent ? "OUI — intervention urgente" : "Non",
+      "Message": document.getElementById("f-message").value.trim() || "(aucun message)"
     };
+    var endpoint, body;
+    if(WEB3FORMS_KEY){
+      endpoint = "https://api.web3forms.com/submit";
+      body = Object.assign({ access_key: WEB3FORMS_KEY, subject: subject, from_name: "Site AM Opération Malfaiteur" }, fields);
+    } else {
+      endpoint = "https://formsubmit.co/ajax/" + encodeURIComponent(FORMSUBMIT_EMAIL);
+      body = Object.assign({ _subject: subject, _template: "table", _captcha: "false" }, fields);
+    }
+
     submitBtn.disabled = true; btnLabel.textContent = "Transmission en cours…";
     try{
-      var res = await fetch(API_BASE + "/api/contact", {
-        method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(payload)
+      var res = await fetch(endpoint, {
+        method:"POST",
+        headers:{"Content-Type":"application/json","Accept":"application/json"},
+        body: JSON.stringify(body)
       });
-      if(!res.ok) throw new Error("bad status "+res.status);
+      var data = await res.json().catch(function(){ return {}; });
+      var ok = res.ok && (data.success === true || data.success === "true");
+      if(!ok) throw new Error("submit failed");
       msg.className = "form-msg ok";
       msg.textContent = "✓ Demande transmise. Notre unité vous recontacte au plus vite. En cas d'urgence, appelez le 07.66.76.02.46.";
       form.reset(); toggle.classList.remove("on"); toggle.setAttribute("aria-checked","false"); urgencyInput.value="false";

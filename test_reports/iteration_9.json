@@ -1,0 +1,22 @@
+{
+  "summary": "Frontend-only regression + new WhatsApp hand-off testing on static index.html. All 5 requested checks pass on desktop (1440x900) and mobile (390x844). Contact form submit stubs window.open which is called with a correct https://wa.me/33766760246?text=... URL containing URL-encoded Nom, Téléphone, Ville, Type de nuisible, Urgence, Message. form-message receives class 'form-msg ok' with WhatsApp text and form fields are reset. Zero network requests fire during submit (no /api/contact, no emergentagent /api, no web3forms). Service card data-testid='service-nids' has role=button and pre-selects 'Guêpes / Frelons' in input-pest. Hero (hero-lead + hero-call/whatsapp/devis) visible, no .girophare, pro-tape ribbon contained within viewport (right=0 <= 390). Mobile: scrollWidth=innerWidth=390, no horizontal overflow; mobile submit also fires wa.me hand-off with 0 network requests.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Captured window.open list contained one leading null entry before the actual submit URL; likely a benign artifact of an earlier scroll/anchor click during service-card interaction. Not a bug for the WhatsApp hand-off, but if the app should never call window.open() with null, verify goDevis/scroll logic doesn't invoke it."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A", "frontend": "100%"},
+  "test_credentials": "N/A (public static site)",
+  "seed_data_creation": "None",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Static site at /app/frontend/public/index.html. WHATSAPP_NUMBER=33766760246, WEB3FORMS_KEY='' (empty default => WhatsApp branch). To test submit: stub window.open in page context (window.open = fn that pushes url to window.__capturedOpen) BEFORE clicking data-testid=submit-btn, then assert URL starts https://wa.me/33766760246?text=. form-message becomes class 'form-msg ok'. No fetch happens in default mode.",
+  "rca of the issue": "N/A – no failures."
+}

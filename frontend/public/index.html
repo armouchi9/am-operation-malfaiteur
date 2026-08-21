@@ -1061,16 +1061,19 @@ html.no-motion .radar-sweep,html.no-motion .sweep2,html.no-motion .sweep-line,ht
   });
 
   /* =====================================================================
-     CONFIG FORMULAIRE — 100% indépendant, hébergeable n'importe où
+     CONFIG FORMULAIRE — 100% indépendant, hébergeable n'importe où (aucun backend)
      ---------------------------------------------------------------------
-     Option A (recommandée) WEB3FORMS : crée une clé gratuite sur
-       https://web3forms.com (ton email reste caché). Colle la clé ci-dessous.
-     Option B (par défaut) FORMSUBMIT : aucun compte ni clé. Les demandes
-       partent vers l'email ci-dessous (1er envoi = 1 email d'activation à
-       valider). Pour masquer l'email, remplace-le par ton alias FormSubmit.
+     PAR DÉFAUT : la demande part sur ton WhatsApp pré-rempli. Ça marche
+       IMMÉDIATEMENT, sans compte ni configuration, sur tout hébergeur.
+     OPTION EMAIL (silencieux, sans WhatsApp) : crée une clé gratuite sur
+       https://web3forms.com et colle-la dans WEB3FORMS_KEY ci-dessous.
      ===================================================================== */
-  var WEB3FORMS_KEY = "";                                  // <-- colle ta clé Web3Forms ici (optionnel)
-  var FORMSUBMIT_EMAIL = "operationmalfaiteur@gmail.com";  // <-- ton email de réception
+  var WEB3FORMS_KEY = "";                // <-- (optionnel) clé Web3Forms pour recevoir par EMAIL
+  var WHATSAPP_NUMBER = "33766760246";   // <-- ton numéro WhatsApp (format international, sans +)
+
+  function resetContactForm(){
+    form.reset(); toggle.classList.remove("on"); toggle.setAttribute("aria-checked","false"); urgencyInput.value="false";
+  }
 
   form.addEventListener("submit", async function(e){
     e.preventDefault();
@@ -1082,43 +1085,53 @@ html.no-motion .radar-sweep,html.no-motion .sweep2,html.no-motion .sweep-line,ht
       return;
     }
     var urgent = urgencyInput.value === "true";
-    var subject = (urgent ? "[URGENCE] " : "") + "Nouvelle demande de devis — " + name;
-    var fields = {
-      "Nom": name,
-      "Téléphone": phone,
-      "Ville": document.getElementById("f-city").value.trim() || "—",
-      "Type de nuisible": document.getElementById("f-pest").value || "—",
-      "Urgence": urgent ? "OUI — intervention urgente" : "Non",
-      "Message": document.getElementById("f-message").value.trim() || "(aucun message)"
-    };
-    var endpoint, body;
+    var city = document.getElementById("f-city").value.trim();
+    var pest = document.getElementById("f-pest").value;
+    var message = document.getElementById("f-message").value.trim();
+
+    /* ---- OPTION EMAIL via Web3Forms (si une clé est configurée) ---- */
     if(WEB3FORMS_KEY){
-      endpoint = "https://api.web3forms.com/submit";
-      body = Object.assign({ access_key: WEB3FORMS_KEY, subject: subject, from_name: "Site AM Opération Malfaiteur" }, fields);
-    } else {
-      endpoint = "https://formsubmit.co/ajax/" + encodeURIComponent(FORMSUBMIT_EMAIL);
-      body = Object.assign({ _subject: subject, _template: "table", _captcha: "false" }, fields);
+      submitBtn.disabled = true; btnLabel.textContent = "Transmission en cours…";
+      try{
+        var res = await fetch("https://api.web3forms.com/submit", {
+          method:"POST",
+          headers:{"Content-Type":"application/json","Accept":"application/json"},
+          body: JSON.stringify({
+            access_key: WEB3FORMS_KEY,
+            subject: (urgent ? "[URGENCE] " : "") + "Nouvelle demande de devis — " + name,
+            from_name: "Site AM Opération Malfaiteur",
+            "Nom": name, "Téléphone": phone, "Ville": city || "—",
+            "Type de nuisible": pest || "—",
+            "Urgence": urgent ? "OUI — intervention urgente" : "Non",
+            "Message": message || "(aucun message)"
+          })
+        });
+        var data = await res.json().catch(function(){ return {}; });
+        if(!(res.ok && (data.success === true || data.success === "true"))) throw new Error("fail");
+        msg.className = "form-msg ok";
+        msg.textContent = "✓ Demande transmise. Notre unité vous recontacte au plus vite. En cas d'urgence, appelez le 07.66.76.02.46.";
+        resetContactForm();
+      }catch(err){
+        msg.className = "form-msg err";
+        msg.innerHTML = "Envoi impossible pour le moment. Appelez-nous au <b>07.66.76.02.46</b> ou via WhatsApp.";
+      }finally{
+        submitBtn.disabled = false; btnLabel.textContent = "Envoyer la demande";
+      }
+      return;
     }
 
-    submitBtn.disabled = true; btnLabel.textContent = "Transmission en cours…";
-    try{
-      var res = await fetch(endpoint, {
-        method:"POST",
-        headers:{"Content-Type":"application/json","Accept":"application/json"},
-        body: JSON.stringify(body)
-      });
-      var data = await res.json().catch(function(){ return {}; });
-      var ok = res.ok && (data.success === true || data.success === "true");
-      if(!ok) throw new Error("submit failed");
-      msg.className = "form-msg ok";
-      msg.textContent = "✓ Demande transmise. Notre unité vous recontacte au plus vite. En cas d'urgence, appelez le 07.66.76.02.46.";
-      form.reset(); toggle.classList.remove("on"); toggle.setAttribute("aria-checked","false"); urgencyInput.value="false";
-    }catch(err){
-      msg.className = "form-msg err";
-      msg.innerHTML = "Envoi impossible pour le moment. Appelez-nous au <b>07.66.76.02.46</b> ou via WhatsApp.";
-    }finally{
-      submitBtn.disabled = false; btnLabel.textContent = "Envoyer la demande";
-    }
+    /* ---- PAR DÉFAUT : hand-off WhatsApp pré-rempli (zéro configuration) ---- */
+    var txt = "Bonjour AM Opération Malfaiteur, je souhaite un devis.\n\n"
+      + "Nom : " + name + "\n"
+      + "Téléphone : " + phone + "\n"
+      + "Ville : " + (city || "—") + "\n"
+      + "Type de nuisible : " + (pest || "—") + "\n"
+      + "Urgence : " + (urgent ? "OUI" : "Non") + "\n"
+      + "Message : " + (message || "—");
+    window.open("https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(txt), "_blank", "noopener");
+    msg.className = "form-msg ok";
+    msg.innerHTML = "✓ Vos informations sont prêtes — <b>WhatsApp s'ouvre, appuyez sur « Envoyer »</b> pour finaliser votre demande. Sinon appelez le <b>07.66.76.02.46</b>.";
+    resetContactForm();
   });
 })();
 </script>

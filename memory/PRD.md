@@ -27,7 +27,19 @@ Règle métier : jamais de tarif fixe — devis gratuit après diagnostic.
 - Logo client intégré (header + footer, `mix-blend-mode:screen`).
 - Formulaire → `/api/contact` (email réel testé OK, HTTP 200).
 
+## Implémenté (2026-08)
+- Formulaire indépendant d'Emergent : hand-off WhatsApp (wa.me/33766760246) par défaut,
+  option email Web3Forms (WEB3FORMS_KEY vide = branche WhatsApp). Aucun backend requis.
+- Favicon/onglet = logo. Réseaux sociaux dans footer (Instagram + TikTok) + JSON-LD sameAs.
+- **Site 100% autonome** : logo téléchargé et optimisé en local `public/logo.png` (506x512, 376Ko).
+  Les 6 références (favicon, apple-touch-icon, og:image, twitter:image, JSON-LD image,
+  logos header/footer) pointent désormais vers `logo.png` relatif — plus aucune URL d'assets
+  Emergent dans le HTML. Prêt pour hébergement statique (Netlify/Cloudflare/OVH…).
+
 ## Backlog / À adapter par le client
 - Remplacer les 3 avis "PLACEHOLDER" par de vrais avis.
-- Brancher un vrai domaine + affiner le logo (version horizontale header).
+- Brancher un vrai domaine : remplacer canonical + og:url (encore en preview) et passer
+  og:image/twitter:image en URL absolue (actuellement relative `logo.png`).
+- SEO avancé (optionnel) : robots.txt + sitemap.xml, image OG dédiée 1200×630, FAQ schema,
+  Google Business Profile + Search Console.
 - P2 : page mentions légales, tracking analytics.

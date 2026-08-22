@@ -38,8 +38,9 @@ Règle métier : jamais de tarif fixe — devis gratuit après diagnostic.
 
 ## Backlog / À adapter par le client
 - Remplacer les 3 avis "PLACEHOLDER" par de vrais avis.
-- Brancher un vrai domaine : remplacer canonical + og:url (encore en preview) et passer
-  og:image/twitter:image en URL absolue (actuellement relative `logo.png`).
+- Brancher un vrai domaine : FAIT (operationmalfaiteur.com). Canonical, og:url, og:image,
+  twitter:image et JSON-LD (image + url) pointent vers https://operationmalfaiteur.com/.
+  Le logo/favicon restent en chemin relatif logo.png (résolus une fois le site hébergé sur le domaine).
 - SEO avancé (optionnel) : robots.txt + sitemap.xml, image OG dédiée 1200×630, FAQ schema,
   Google Business Profile + Search Console.
 - P2 : page mentions légales, tracking analytics.
